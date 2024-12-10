@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import React from "react";
-import "./globals.css";
+import "../styles/globals.css";
 import { spaceGrotesk, workSans, oxanium } from "@/lib/font";
 
 export const metadata: Metadata = {
