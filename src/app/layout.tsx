@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import React from "react";
+import "./globals.css";
+import { spaceGrotesk, workSans, oxanium } from "@/lib/font";
 
 export const metadata: Metadata = {
   title: "Astrea Jobs | Navigate Your Career",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children, }
                                    : Readonly<{ children: React.ReactNode; }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${spaceGrotesk.variable} ${workSans.variable} ${oxanium.variable} antialiased`}>
       <body>
         {children}
       </body>

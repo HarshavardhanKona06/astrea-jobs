@@ -78,7 +78,12 @@ export default {
 			'coral-on-hover-dark': "var(--coral-on-hover-dark)",
 			'background-on-hover-dark': "var(--background-on-hover-dark)",
 			'border-dark': "var(--border-dark)",
-  		}
+  		},
+		fontFamily: {
+			'space-grotesk': 'var(--font-space-grotesk)',
+			'work-sans': 'var(--font-work-sans)',
+			'oxanium': 'var(--font-oxanium)',
+		},
   	}
   },
   plugins: [animate],
