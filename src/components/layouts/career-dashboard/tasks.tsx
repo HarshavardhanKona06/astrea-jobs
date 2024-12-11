@@ -50,17 +50,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
                                                dueTime,
                                                isCompleted
                                            }) => {
-    const getTypeStyles = (taskType: TaskItemProps['type']): string => {
-        if (isCompleted) return 'text-teal-500 dark:text-teal-400';
-        switch(taskType) {
-            case 'application':
-                return 'text-lapis-lazuli-light dark:text-lapis-lazuli-dark';
-            case 'outreach':
-                return 'text-coral-light dark:text-coral-dark';
-            default:
-                return 'text-text-secondary-light dark:text-text-secondary-dark';
-        }
-    };
+    // const getTypeStyles = (taskType: TaskItemProps['type']): string => {
+    //     if (isCompleted) return 'text-teal-500 dark:text-teal-400';
+    //     switch(taskType) {
+    //         case 'application':
+    //             return 'text-lapis-lazuli-light dark:text-lapis-lazuli-dark';
+    //         case 'outreach':
+    //             return 'text-coral-light dark:text-coral-dark';
+    //         default:
+    //             return 'text-text-secondary-light dark:text-text-secondary-dark';
+    //     }
+    // };
 
     const getDueInfo = (): { display: string; fullDate: string; color: 'red' | 'amber' | 'teal' } => {
         const now = new Date();
