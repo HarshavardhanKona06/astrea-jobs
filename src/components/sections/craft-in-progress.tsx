@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useRef } from 'react';
-import lottie, { AnimationItem } from 'lottie-web';
+import { AnimationItem } from 'lottie-web';
 import animationData from '@/lib/craft-in-progress.json';
 
 interface UnderConstructionProps {
@@ -20,12 +20,14 @@ const CraftInProgress: React.FC<UnderConstructionProps> = ({
     useEffect(() => {
         if (!animationContainer.current) return;
 
-        animationInstance.current = lottie.loadAnimation({
-            container: animationContainer.current,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            animationData: animationData,
+        import('lottie-web').then((lottie) => {
+            animationInstance.current = lottie.default.loadAnimation({
+                container: animationContainer.current!,
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                animationData: animationData,
+            });
         });
 
         return () => {
