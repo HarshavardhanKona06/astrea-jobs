@@ -73,7 +73,7 @@ const NavBar = () => {
             <div className="w-full h-14 flex items-center justify-between px-2">
                 <div className="flex items-center space-x-4">
 
-                    <Link href="/"
+                    <Link href="/dashboard"
                           className="flex items-center px-3 py-2 transition-colors duration-200 hover:opacity-90">
 
                         <div className="relative h-6 w-6">

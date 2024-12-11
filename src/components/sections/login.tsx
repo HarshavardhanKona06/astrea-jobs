@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import ContentSlider from "@/components/layouts/login/content-slider";
 import LogoBrand from "@/components/layouts/login/logo-brand";
 import LoginForm from "@/components/layouts/login/login-form";
+import DemoToolTip from "@/components/layouts/login/demo-tool-tip";
 
 export default function LoginPage() {
     const router = useRouter()
@@ -47,7 +48,8 @@ export default function LoginPage() {
                         </div>
 
                         {/* Demo Button */}
-                        <div className="mt-auto pt-8">
+                        <div className="mt-auto pt-8 relative">
+                            <DemoToolTip />
                             <Button
                                 variant="ghost"
                                 onClick={handleDemoClick}
