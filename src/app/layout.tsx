@@ -5,7 +5,7 @@ import { spaceGrotesk, workSans, oxanium } from "@/lib/font";
 import {ThemeProvider} from "@/app/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Astrea Jobs | Navigate Your Career",
+  title: "AstreaJobs | Navigate Your Career",
   description: "Streamline your job search and professional networking with an intelligent tracking system.",
 };
 
