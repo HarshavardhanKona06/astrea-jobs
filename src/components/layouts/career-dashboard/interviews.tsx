@@ -3,13 +3,33 @@ import React, { useState } from 'react';
 import {
     CalendarCheck2,
     Monitor,
+    PhoneCall,
+    UserRound,
     Briefcase,
     FileText,
-    Clock, PhoneCall, UserRound
+    Clock
 } from 'lucide-react';
 
-const CustomTooltip = ({ children, content }) => {
-    const [isVisible, setIsVisible] = useState(false);
+interface TooltipProps {
+    children: React.ReactNode;
+    content: string;
+}
+
+interface InterviewItemProps {
+    type: 'phone' | 'virtual' | 'onsite';
+    role: string;
+    company: string;
+    applicationLink: string;
+    resumeLink: string;
+    startTime: string;
+    endTime: string;
+    timeZone: string;
+}
+
+type InterviewData = InterviewItemProps
+
+const CustomTooltip: React.FC<TooltipProps> = ({ children, content }) => {
+    const [isVisible, setIsVisible] = useState<boolean>(false);
 
     return (
         <div className="relative inline-flex"
@@ -27,16 +47,16 @@ const CustomTooltip = ({ children, content }) => {
     );
 };
 
-const InterviewItem = ({
-                           type,
-                           role,
-                           company,
-                           applicationLink,
-                           resumeLink,
-                           startTime,
-                           endTime,
-                           timeZone
-                       }) => {
+const InterviewItem: React.FC<InterviewItemProps> = ({
+                                                         type,
+                                                         role,
+                                                         company,
+                                                         applicationLink,
+                                                         resumeLink,
+                                                         startTime,
+                                                         endTime,
+                                                         timeZone
+                                                     }) => {
     const getInterviewTypeIcon = () => {
         const iconProps = {
             className: "w-3 h-3 flex-shrink-0"
@@ -46,7 +66,7 @@ const InterviewItem = ({
             ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-300'
             : 'bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-300';
 
-        let Icon;
+        let Icon: React.FC<{ className: string }>;
         switch (type) {
             case 'phone':
                 Icon = PhoneCall;
@@ -68,10 +88,10 @@ const InterviewItem = ({
         );
     };
 
-    const getTimeColor = () => {
+    const getTimeColor = (): string => {
         const now = new Date();
         const interview = new Date(startTime);
-        const hoursUntilInterview = (interview - now) / (1000 * 60 * 60);
+        const hoursUntilInterview = (interview.getTime() - now.getTime()) / (1000 * 60 * 60);
 
         if (hoursUntilInterview <= 48) {
             return 'text-red-500 dark:text-red-400';
@@ -81,7 +101,7 @@ const InterviewItem = ({
         return 'text-green-500 dark:text-green-400';
     };
 
-    const formatDateTime = () => {
+    const formatDateTime = (): { display: string; fullDate: string } => {
         const start = new Date(startTime);
         const end = new Date(endTime);
 
@@ -115,10 +135,8 @@ const InterviewItem = ({
                         hover:bg-background-on-hover-light dark:hover:bg-background-on-hover-dark
                         transition-colors duration-200
                         border-b border-b-border-light dark:border-b-border-dark">
-            {/* Interview Type Icon */}
             {getInterviewTypeIcon()}
 
-            {/* Role and Company */}
             <div className="flex-1 flex items-center gap-2 ml-3">
                 <span className="text-sm">
                     <span className="font-medium text-text-primary-light dark:text-text-primary-dark">
@@ -130,7 +148,6 @@ const InterviewItem = ({
                     </span>
                 </span>
 
-                {/* Link Icons */}
                 <div className="flex items-center gap-2">
                     {applicationLink && (
                         <CustomTooltip content={`View application: ${applicationLink}`}>
@@ -151,7 +168,6 @@ const InterviewItem = ({
                 </div>
             </div>
 
-            {/* Interview Time with Tooltip */}
             <CustomTooltip content={fullDate}>
                 <div className={`flex items-center gap-1.5 text-xs font-medium ml-4 ${timeColor}`}>
                     <Clock className="w-3.5 h-3.5" />
@@ -162,8 +178,8 @@ const InterviewItem = ({
     );
 };
 
-const InterviewsBlock = () => {
-    const interviews = [
+const InterviewsBlock: React.FC = () => {
+    const interviews: InterviewData[] = [
         {
             type: 'phone',
             role: 'Senior Software Engineer',
@@ -230,7 +246,6 @@ const InterviewsBlock = () => {
         <div className="rounded-lg border border-border-light dark:border-border-dark
                         bg-background-secondary-light dark:bg-background-secondary-dark
                         hover:border-lapis-lazuli-light dark:hover:border-lapis-lazuli-dark transition-all duration-200">
-            {/* Header */}
             <div className="flex items-center gap-2 px-3 pt-3 pb-2">
                 <div className="p-1">
                     <CalendarCheck2 className="w-5 h-5 text-lapis-lazuli-light dark:text-lapis-lazuli-dark" />
@@ -240,7 +255,6 @@ const InterviewsBlock = () => {
                 </h2>
             </div>
 
-            {/* Interviews List with scroll */}
             <div className="flex flex-col px-3 max-h-48 overflow-y-auto">
                 {interviews.map((interview, index) => (
                     <InterviewItem key={index} {...interview} />

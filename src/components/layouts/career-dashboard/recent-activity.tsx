@@ -8,13 +8,21 @@ import {
     Monitor,
     UserRound,
     CheckCircle,
-    History
+    History,
+    LucideIcon
 } from 'lucide-react';
 
-const getRelativeTime = (timestamp) => {
+interface ActivityItemProps {
+    type: 'application' | 'outreach' | 'interview' | 'task';
+    title: string;
+    action: string;
+    timestamp: Date;
+    subType?: 'phone' | 'virtual' | 'onsite' | null;
+}
+
+const getRelativeTime = (timestamp: Date): string => {
     const now = new Date();
-    const date = new Date(timestamp);
-    const diffInSeconds = Math.floor((now - date) / 1000);
+    const diffInSeconds = Math.floor((now.getTime() - timestamp.getTime()) / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
@@ -25,14 +33,10 @@ const getRelativeTime = (timestamp) => {
     return 'just now';
 };
 
-const ActivityItem = ({ type, title, action, timestamp, subType = null }) => {
-    const getIcon = () => {
-        const iconProps = {
-            className: "w-4 h-4 flex-shrink-0"
-        };
-
-        let Icon;
-        let wrapperClass;
+const ActivityItem: React.FC<ActivityItemProps> = ({ type, title, action, timestamp, subType = null }) => {
+    const getIcon = (): { Icon: LucideIcon; wrapperClass: string } => {
+        let Icon: LucideIcon;
+        let wrapperClass: string;
 
         switch (type) {
             case 'application':
@@ -58,22 +62,20 @@ const ActivityItem = ({ type, title, action, timestamp, subType = null }) => {
                 wrapperClass = 'bg-gray-100 text-gray-700 dark:bg-gray-500/10 dark:text-gray-300';
         }
 
-        return (
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${wrapperClass}`}>
-                <Icon {...iconProps} />
-            </div>
-        );
+        return { Icon, wrapperClass };
     };
+
+    const { Icon, wrapperClass } = getIcon();
 
     return (
         <div className="group flex items-center px-4 py-2.5 font-work-sans
                         hover:bg-background-on-hover-light dark:hover:bg-background-on-hover-dark
                         transition-colors duration-200
                         border-b border-b-border-light dark:border-b-border-dark">
-            {/* Activity Icon */}
-            {getIcon()}
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${wrapperClass}`}>
+                <Icon className="w-4 h-4 flex-shrink-0" />
+            </div>
 
-            {/* Activity Text */}
             <div className="flex-1 ml-2">
                 <span className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">
                     {title}
@@ -83,7 +85,6 @@ const ActivityItem = ({ type, title, action, timestamp, subType = null }) => {
                 </span>
             </div>
 
-            {/* Timestamp */}
             <div className="flex items-center gap-0.5 text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">
                 <History className="w-3.5 h-3.5" />
                 <span>{getRelativeTime(timestamp)}</span>
@@ -92,45 +93,45 @@ const ActivityItem = ({ type, title, action, timestamp, subType = null }) => {
     );
 };
 
-const RecentActivityBlock = () => {
-    const activities = [
+const RecentActivityBlock: React.FC = () => {
+    const activities: ActivityItemProps[] = [
         {
             type: 'application',
             title: 'Senior SWE Application',
             action: 'moved to "Applied"',
-            timestamp: new Date(Date.now() - 2 * 60 * 1000) // 2 minutes ago
+            timestamp: new Date(Date.now() - 2 * 60 * 1000)
         },
         {
             type: 'interview',
             subType: 'virtual',
             title: 'Technical Interview',
             action: 'scheduled with TechCorp',
-            timestamp: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
+            timestamp: new Date(Date.now() - 10 * 60 * 1000)
         },
         {
             type: 'outreach',
             title: 'Connection request',
             action: 'sent to Engineering Manager at Google',
-            timestamp: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes ago
+            timestamp: new Date(Date.now() - 30 * 60 * 1000)
         },
         {
             type: 'task',
             title: 'Update Resume',
             action: 'marked as complete',
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
         },
         {
             type: 'interview',
             subType: 'phone',
             title: 'Phone Screening',
             action: 'completed with InnovateLabs',
-            timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000) // 4 hours ago
+            timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000)
         },
         {
             type: 'application',
             title: 'Full Stack Developer role',
             action: 'added to wishlist',
-            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) // 1 day ago
+            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000)
         }
     ];
 
@@ -138,7 +139,6 @@ const RecentActivityBlock = () => {
         <div className="rounded-lg border border-border-light dark:border-border-dark
                         bg-background-secondary-light dark:bg-background-secondary-dark
                         hover:border-coral-light dark:hover:border-coral-dark transition-all duration-200">
-            {/* Header */}
             <div className="flex items-center gap-2 px-3 pt-3 pb-2">
                 <div className="p-1">
                     <Rss className="w-5 h-5 text-coral-light dark:text-coral-dark" />
@@ -148,7 +148,6 @@ const RecentActivityBlock = () => {
                 </h2>
             </div>
 
-            {/* Activity List with scroll */}
             <div className="flex flex-col px-1 max-h-52 overflow-y-auto">
                 {activities.map((activity, index) => (
                     <ActivityItem key={index} {...activity} />

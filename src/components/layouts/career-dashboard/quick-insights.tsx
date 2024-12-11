@@ -1,12 +1,33 @@
 import React from 'react';
-import { Briefcase, PhoneCall, MessageCircleReply, MessageCircle, TrendingDown, TrendingUp } from 'lucide-react';
+import { Briefcase, PhoneCall, MessageCircleReply, MessageCircle, TrendingDown, TrendingUp, LucideIcon } from 'lucide-react';
 
-const QuickInsightCard = ({
-                              title,
-                              icon: Icon,
-                              metrics,
-                              variant
-                          }) => {
+interface Metric {
+    value: number;
+    trend?: number;
+    label: string;
+    date: string;
+}
+
+interface QuickInsightCardProps {
+    title: string;
+    icon: LucideIcon;
+    metrics: Metric[];
+    variant: string;
+}
+
+interface InsightData {
+    title: string;
+    icon: LucideIcon;
+    variant: string;
+    metrics: Metric[];
+}
+
+const QuickInsightCard: React.FC<QuickInsightCardProps> = ({
+                                                               title,
+                                                               icon: Icon,
+                                                               metrics,
+                                                               variant
+                                                           }) => {
     return (
         <div className={`
             p-3 rounded-lg border border-border-light dark:border-border-dark
@@ -29,14 +50,14 @@ const QuickInsightCard = ({
             </div>
 
             <div className="grid grid-cols-3 gap-6 pl-2">
-                {metrics.map((metric, index) => (
+                {metrics.map((metric: Metric, index: number) => (
                     <div key={index} className="space-y-0.5 flex flex-col items-center tracking-tight">
                         <div className="relative inline-flex">
                             <span
                                 className="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">
                                 {metric.value}
                             </span>
-                            {metric.trend && (
+                            {metric.trend !== undefined && (
                                 <span className={`
                                     absolute -top-1 -right-6
                                     text-sm font-medium flex items-center
@@ -45,7 +66,7 @@ const QuickInsightCard = ({
                                     : metric.trend < 0
                                         ? 'text-red-500 dark:text-red-400'
                                         : 'text-text-secondary-light dark:text-text-secondary-dark'
-                                    }
+                                }
                                 `}>
                                     {metric.trend > 0 ? (
                                         <TrendingUp className="w-3 h-3"/>
@@ -69,12 +90,12 @@ const QuickInsightCard = ({
     );
 };
 
-const QuickInsights = () => {
+const QuickInsights: React.FC = () => {
     const currentWeek = "Nov 24 - Nov 30";
     const currentMonth = "November 2024";
     const currentYear = "2024";
 
-    const insights = [
+    const insights: InsightData[] = [
         {
             title: "Applications",
             icon: Briefcase,
@@ -112,7 +133,7 @@ const QuickInsights = () => {
             metrics: [
                 {value: 1, trend: 2, label: "This Week", date: currentWeek},
                 {value: 5, label: "This Month", date: currentMonth},
-                {value: 15, label: "This Year", date: currentYear }
+                {value: 15, label: "This Year", date: currentYear}
             ]
         }
     ];
@@ -120,7 +141,7 @@ const QuickInsights = () => {
     return (
         <div className="pt-16 p-6 font-work-sans">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {insights.map((insight, index) => (
+                {insights.map((insight: InsightData, index: number) => (
                     <QuickInsightCard key={index} {...insight} />
                 ))}
             </div>

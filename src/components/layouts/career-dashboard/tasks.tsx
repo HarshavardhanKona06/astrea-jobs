@@ -9,8 +9,22 @@ import {
     Clock
 } from 'lucide-react';
 
-const CustomTooltip = ({ children, content }) => {
-    const [isVisible, setIsVisible] = useState(false);
+interface TooltipProps {
+    children: React.ReactNode;
+    content: string;
+}
+
+interface TaskItemProps {
+    text: string;
+    type: 'general' | 'application' | 'outreach';
+    linkedItem?: string;
+    dueDate: string;
+    dueTime?: string;
+    isCompleted: boolean;
+}
+
+const CustomTooltip: React.FC<TooltipProps> = ({ children, content }) => {
+    const [isVisible, setIsVisible] = useState<boolean>(false);
 
     return (
         <div className="relative inline-flex"
@@ -28,17 +42,17 @@ const CustomTooltip = ({ children, content }) => {
     );
 };
 
-const TaskItem = ({
-                      text,
-                      type,
-                      linkedItem,
-                      dueDate,
-                      dueTime,
-                      isCompleted
-                  }) => {
-    const getTypeStyles = (type) => {
+const TaskItem: React.FC<TaskItemProps> = ({
+                                               text,
+                                               type,
+                                               linkedItem,
+                                               dueDate,
+                                               dueTime,
+                                               isCompleted
+                                           }) => {
+    const getTypeStyles = (taskType: TaskItemProps['type']): string => {
         if (isCompleted) return 'text-teal-500 dark:text-teal-400';
-        switch(type) {
+        switch(taskType) {
             case 'application':
                 return 'text-lapis-lazuli-light dark:text-lapis-lazuli-dark';
             case 'outreach':
@@ -48,10 +62,10 @@ const TaskItem = ({
         }
     };
 
-    const getDueInfo = () => {
+    const getDueInfo = (): { display: string; fullDate: string; color: 'red' | 'amber' | 'teal' } => {
         const now = new Date();
         const due = new Date(dueDate);
-        const diffDays = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+        const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         const fullDate = due.toLocaleDateString('en-US', {
             weekday: 'long',
             month: 'short',
@@ -60,8 +74,8 @@ const TaskItem = ({
             minute: '2-digit'
         });
 
-        let display;
-        let color;
+        let display: string;
+        let color: 'red' | 'amber' | 'teal';
 
         if (isCompleted) {
             color = 'teal';
@@ -86,15 +100,13 @@ const TaskItem = ({
     const { display, fullDate, color } = getDueInfo();
 
     return (
-        <div className={"group flex items-center px-4 py-2.5 font-work-sans hover:bg-background-on-hover-light dark:hover:bg-background-on-hover-dark transition-colors duration-200 border-b border-b-border-light dark:border-b-border-dark"} >
-            {/* Task Type Indicator */}
+        <div className="group flex items-center px-4 py-2.5 font-work-sans hover:bg-background-on-hover-light dark:hover:bg-background-on-hover-dark transition-colors duration-200 border-b border-b-border-light dark:border-b-border-dark">
             {isCompleted ? (
                 <CheckCircle className="w-4 h-4 flex-shrink-0 text-teal-500 dark:text-teal-400" />
             ) : (
-                <Circle className={`w-4 h-4 flex-shrink-0 text-text-secondary-light dark:text-text-secondary-dark`} />
+                <Circle className="w-4 h-4 flex-shrink-0 text-text-secondary-light dark:text-text-secondary-dark" />
             )}
 
-            {/* Task Text and Link Icon */}
             <div className="flex-1 flex items-center gap-2 ml-3">
                 <span className={`text-sm font-medium ${
                     isCompleted
@@ -121,7 +133,6 @@ const TaskItem = ({
                 )}
             </div>
 
-            {/* Due Date with Tooltip */}
             <CustomTooltip content={fullDate}>
                 <div className={`
                     flex items-center gap-1.5 text-xs font-medium ml-4
@@ -140,8 +151,8 @@ const TaskItem = ({
     );
 };
 
-const TasksBlock = () => {
-    const tasks = [
+const TasksBlock: React.FC = () => {
+    const tasks: TaskItemProps[] = [
         {
             text: "Update Resume and Cover Letter",
             type: "general",
@@ -153,37 +164,43 @@ const TasksBlock = () => {
             type: "application",
             linkedItem: "techcorp-app",
             dueDate: "2024-11-24",
-            dueTime: "5:00 PM"
+            dueTime: "5:00 PM",
+            isCompleted: false
         },
         {
             text: "Follow up with John from InnovateLabs",
             type: "outreach",
             linkedItem: "john-contact",
             dueDate: "2024-11-25",
-            dueTime: "2:00 PM"
+            dueTime: "2:00 PM",
+            isCompleted: false
         },
         {
             text: "Submit application to StartupXYZ",
             type: "application",
             linkedItem: "startup-app",
             dueDate: "2024-11-26",
-            dueTime: "3:00 PM"
+            dueTime: "3:00 PM",
+            isCompleted: false
         },
         {
             text: "Connect with React Developer Community",
             type: "outreach",
             linkedItem: "community",
-            dueDate: "2024-11-27"
+            dueDate: "2024-11-27",
+            isCompleted: false
         },
         {
             text: "Review Tech Stack Requirements",
             type: "general",
-            dueDate: "2024-11-28"
+            dueDate: "2024-11-28",
+            isCompleted: false
         },
         {
             text: "Update portfolio website",
             type: "general",
-            dueDate: "2024-11-29"
+            dueDate: "2024-11-29",
+            isCompleted: false
         }
     ];
 
@@ -191,7 +208,6 @@ const TasksBlock = () => {
         <div className="rounded-lg border border-border-light
                         dark:border-border-dark bg-background-secondary-light dark:bg-background-secondary-dark
                         hover:border-coral-light dark:hover:border-coral-dark transition-all duration-200">
-            {/* Header */}
             <div className="flex items-center gap-2 px-3 pt-3 pb-2">
                 <div className="p-1">
                     <ListTodo className="w-5 h-5 text-coral-light dark:text-coral-dark" />
@@ -201,7 +217,6 @@ const TasksBlock = () => {
                 </h2>
             </div>
 
-            {/* Tasks List with scroll */}
             <div className="flex flex-col px-3 max-h-48 overflow-y-auto">
                 {tasks.map((task, index) => (
                     <TaskItem key={index} {...task} />
